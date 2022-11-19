@@ -57,6 +57,19 @@ int SET_PRESSED() {
 }
 
 
+void setKeyReg2(int i) {
+	if (i == 0) KeyReg2[i] = HAL_GPIO_ReadPin(BUTTON_MODE_GPIO_Port, BUTTON_MODE_Pin);
+	if (i == 1) KeyReg2[i] = HAL_GPIO_ReadPin(BUTTON_TIME_GPIO_Port, BUTTON_TIME_Pin);
+	if (i == 2) KeyReg2[i] = HAL_GPIO_ReadPin(BUTTON_SET_GPIO_Port, BUTTON_SET_Pin);
+}
+
+void setFlag(int i) {
+	if (i == 0) MODE_flag = 1;
+	if (i == 1) TIME_flag = 1;
+	if (i == 2) SET_flag = 1;
+}
+
+
 void getKeyInput() {
 
 	for (int i = 0; i < 3; i++) {
@@ -75,18 +88,14 @@ void getKeyInput() {
 		KeyReg0[i] = KeyReg1[i];
 		KeyReg1[i] = KeyReg2[i];
 
-		if (i == 0) KeyReg2[i] = HAL_GPIO_ReadPin(BUTTON_MODE_GPIO_Port, BUTTON_MODE_Pin);
-		if (i == 1) KeyReg2[i] = HAL_GPIO_ReadPin(BUTTON_TIME_GPIO_Port, BUTTON_TIME_Pin);
-		if (i == 2) KeyReg2[i] = HAL_GPIO_ReadPin(BUTTON_SET_GPIO_Port, BUTTON_SET_Pin);
+		setKeyReg2(i);
 
 
 		if ((KeyReg0[i] == KeyReg1[i]) && (KeyReg1[i] == KeyReg2[i])) {
 			if (KeyReg3[i] != KeyReg2[i]) {
 				KeyReg3[i] = KeyReg2[i];
 				if (KeyReg2[i] == NORMAL_STATE) {
-					if (i == 0) MODE_flag = 1;
-					if (i == 1) TIME_flag = 1;
-					if (i == 2) SET_flag = 1;
+					setFlag(i);
 				}
 			}
 		}
